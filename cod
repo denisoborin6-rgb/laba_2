@@ -1,0 +1,390 @@
+### MAIN
+
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class Main {
+
+    private static final Scanner sc = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        while (true) {
+            printMenu();
+            int choice = readInt("Ваш выбор: ");
+            switch (choice) {
+                case 1 -> Task1.run();
+                case 2 -> Task2.run();
+                case 3 -> Task3.run();
+                case 4 -> Task4.run();
+                case 5 -> Task5.run();
+                case 6 -> Task6.run();
+                case 0 -> { System.out.println("До свидания!"); return; }
+                default -> System.out.println("Нет такого пункта.\n");
+            }
+        }
+    }
+
+    private static void printMenu() {
+        System.out.println("\n===== Лабораторная работа №2 =====");
+        System.out.println("1. Задание 1. Имена");
+        System.out.println("2. Задание 2. Человек с именем");
+        System.out.println("3. Задание 3. Человек с родителем");
+        System.out.println("4. Задание 4. Ломаная");
+        System.out.println("5. Задание 5. Создаём ломаную");
+        System.out.println("6. Задание 6. Длина ломаной");
+        System.out.println("0. Выход");
+        System.out.println("==================================");
+    }
+
+    // Проверка ввода: пользователь должен ввести целое число
+    private static int readInt(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            try {
+                int v = sc.nextInt();
+                sc.nextLine();
+                return v;
+            } catch (InputMismatchException e) {
+                System.out.println("Ошибка: нужно целое число. Попробуйте снова.");
+                sc.nextLine();
+            }
+        }
+    }
+}
+
+
+
+### Task1
+
+public class Task1 {
+
+    private String surname;
+    private String firstName;
+    private String patronymic;
+
+    public Task1(String surname, String firstName, String patronymic) {
+        this.surname    = normalize(surname);
+        this.firstName  = normalize(firstName);
+        this.patronymic = normalize(patronymic);
+    }
+
+    public Task1(String surname, String firstName) {
+        this(surname, firstName, null);
+    }
+
+    public Task1(String firstName) {
+        this(null, firstName, null);
+    }
+
+    public Task1() {
+        this(null, null, null);
+    }
+
+    private static String normalize(String v) {
+        if (v == null || v.trim().isEmpty()) return null;
+        return v.trim();
+    }
+
+    public String getSurname()    { return surname; }
+    public String getFirstName()  { return firstName; }
+    public String getPatronymic() { return patronymic; }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        if (surname != null)    sb.append(surname);
+        if (firstName != null)  { if (sb.length() > 0) sb.append(" "); sb.append(firstName); }
+        if (patronymic != null) { if (sb.length() > 0) sb.append(" "); sb.append(patronymic); }
+        return sb.toString();
+    }
+
+    public static void run() {
+        System.out.println("--- Задание 1. Имена ---");
+        System.out.println(new Task1("Клеопатра"));
+        System.out.println(new Task1("Пушкин", "Александр", "Сергеевич"));
+        System.out.println(new Task1("Маяковский", "Владимир"));
+    }
+}
+
+
+
+### Task2
+
+public class Task2 {
+
+    private Task1 name;
+    private int height;
+
+    public Task2(Task1 name, int height) {
+        this.name = name;
+        this.height = height;
+    }
+
+    public Task1 getName()  { return name; }
+    public int getHeight()  { return height; }
+
+    @Override
+    public String toString() {
+        return name + ", рост " + height;
+    }
+
+    public static void run() {
+        System.out.println("--- Задание 2. Человек с именем ---");
+        System.out.println(new Task2(new Task1("Клеопатра"), 152));
+        System.out.println(new Task2(new Task1("Пушкин", "Александр", "Сергеевич"), 167));
+        System.out.println(new Task2(new Task1("Маяковский", "Владимир"), 189));
+    }
+}
+
+
+
+
+### Task3
+
+public class Task3 {
+
+    private Task1 name;
+    private int height;
+    private Task3 father;
+
+    public Task3(Task1 name, int height) {
+        this(name, height, null);
+    }
+
+    public Task3(Task1 name, int height, Task3 father) {
+        this.name = name;
+        this.height = height;
+        this.father = father;
+    }
+
+    public Task1 getName()   { return name; }
+    public int getHeight()   { return height; }
+    public Task3 getFather() { return father; }
+
+    private String resolveSurname() {
+        if (name.getSurname() != null) return name.getSurname();
+        if (father != null && father.getName().getSurname() != null)
+            return father.getName().getSurname();
+        return null;
+    }
+
+    private String resolvePatronymic() {
+        if (name.getPatronymic() != null) return name.getPatronymic();
+        if (father != null && father.getName().getFirstName() != null)
+            return father.getName().getFirstName() + "ович";
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        String s = resolveSurname();
+        String f = name.getFirstName();
+        String p = resolvePatronymic();
+
+        if (s != null) sb.append(s);
+        if (f != null) { if (sb.length() > 0) sb.append(" "); sb.append(f); }
+        if (p != null) { if (sb.length() > 0) sb.append(" "); sb.append(p); }
+
+        return sb + ", рост " + height;
+    }
+
+    public static void run() {
+        System.out.println("--- Задание 3. Человек с родителем ---");
+
+        Task3 boris = new Task3(new Task1("Борис"), 180);
+        Task3 peter = new Task3(new Task1("Чудов", "Пётр"), 175, boris);
+        Task3 ivan  = new Task3(new Task1("Чудов", "Иван"), 170, peter);
+
+        System.out.println("Иван:  " + ivan);
+        System.out.println("Пётр:  " + peter);
+        System.out.println("Борис: " + boris);
+    }
+}
+
+
+
+
+### Task4
+
+public class Task4 {
+
+    // Внутренний класс Точка
+    public static class Point {
+        private int x;
+        private int y;
+
+        public Point(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public Point() {
+            this(0, 0);
+        }
+
+        public int getX() { return x; }
+        public int getY() { return y; }
+
+        public void shift(int dx, int dy) {
+            this.x += dx;
+            this.y += dy;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + x + ";" + y + ")";
+        }
+    }
+
+    // Внутренний класс Ломаная
+    public static class Polyline {
+        private Point[] points;
+
+        public Polyline() {
+            this.points = new Point[0];
+        }
+
+        public Polyline(Point... points) {
+            this.points = (points == null) ? new Point[0] : points;
+        }
+
+        public Point[] getPoints() { return points; }
+        public Point getPoint(int i) { return points[i]; }
+        public void setPoints(Point[] v) { this.points = (v == null) ? new Point[0] : v; }
+        public int size() { return points.length; }
+
+        public void addPoints(Point... newPoints) {
+            if (newPoints == null || newPoints.length == 0) return;
+            Point[] res = new Point[points.length + newPoints.length];
+            System.arraycopy(points, 0, res, 0, points.length);
+            System.arraycopy(newPoints, 0, res, points.length, newPoints.length);
+            this.points = res;
+        }
+
+        public double length() {
+            double sum = 0;
+            for (int i = 0; i < points.length - 1; i++) {
+                int dx = points[i + 1].getX() - points[i].getX();
+                int dy = points[i + 1].getY() - points[i].getY();
+                sum += Math.sqrt(dx * dx + dy * dy);
+            }
+            return sum;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder("Линия [");
+            for (int i = 0; i < points.length; i++) {
+                if (i > 0) sb.append(",");
+                sb.append(points[i]);
+            }
+            return sb.append("]").toString();
+        }
+    }
+
+    public static void run() {
+        System.out.println("--- Задание 4. Ломаная ---");
+
+        Point p1 = new Point(1, 5);
+        Point p2 = new Point(2, 8);
+        Point p3 = new Point(5, 3);
+        Point p4 = new Point(2, -5);
+        Point p5 = new Point(4, -8);
+
+        Polyline first  = new Polyline(p1, p2, p3);
+        Polyline second = new Polyline(p1, p4, p5, p3);
+
+        System.out.println("Первая ломаная: " + first);
+        System.out.println("Вторая ломаная: " + second);
+
+        first.getPoint(0).shift(10, 10);
+
+        System.out.println("После сдвига начала первой ломаной на (10, 10):");
+        System.out.println("Первая ломаная: " + first);
+        System.out.println("Вторая ломаная: " + second);
+    }
+}
+
+
+
+
+### Task5
+
+public class Task5 {
+
+    private Task4.Polyline empty;
+    private Task4.Polyline single;
+    private Task4.Polyline multi;
+
+    public Task5() {
+        empty  = new Task4.Polyline();
+        single = new Task4.Polyline(new Task4.Point(1, 5));
+        multi  = new Task4.Polyline(
+                new Task4.Point(1, 5),
+                new Task4.Point(2, 8),
+                new Task4.Point(5, 3)
+        );
+    }
+
+    public Task4.Polyline getEmpty()  { return empty; }
+    public Task4.Polyline getSingle() { return single; }
+    public Task4.Polyline getMulti()  { return multi; }
+
+    @Override
+    public String toString() {
+        return "Task5: [" + empty + "] [" + single + "] [" + multi + "]";
+    }
+
+    public static void run() {
+        System.out.println("--- Задание 5. Создаём ломаную ---");
+
+        Task5 t = new Task5();
+        System.out.println("Без параметров:   " + t.getEmpty());
+        System.out.println("Одна точка:       " + t.getSingle());
+        System.out.println("Набор точек:      " + t.getMulti());
+    }
+}
+
+
+
+
+### Task6
+
+public class Task6 {
+
+    private Task4.Polyline line;
+
+    public Task6() {
+        line = new Task4.Polyline(
+                new Task4.Point(1, 5),
+                new Task4.Point(2, 8),
+                new Task4.Point(5, 3)
+        );
+    }
+
+    public Task4.Polyline getLine() { return line; }
+
+    public double length() {
+        return line.length();
+    }
+
+    @Override
+    public String toString() {
+        return "Task6: " + line;
+    }
+
+    public static void run() {
+        System.out.println("--- Задание 6. Длина ломаной ---");
+
+        Task6 t = new Task6();
+        System.out.println("Ломаная: " + t.getLine());
+        System.out.printf ("Длина:   %.3f%n", t.length());
+
+        t.getLine().addPoints(new Task4.Point(5, 15), new Task4.Point(8, 10));
+
+        System.out.println("После добавления точек (5;15) и (8;10):");
+        System.out.println("Ломаная: " + t.getLine());
+        System.out.printf ("Длина:   %.3f%n", t.length());
+    }
+}
