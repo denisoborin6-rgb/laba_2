@@ -1,5 +1,3 @@
-### MAIN
-
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -12,12 +10,30 @@ public class Main {
             printMenu();
             int choice = readInt("Ваш выбор: ");
             switch (choice) {
-                case 1 -> Task1.run();
-                case 2 -> Task2.run();
-                case 3 -> Task3.run();
-                case 4 -> Task4.run();
-                case 5 -> Task5.run();
-                case 6 -> Task6.run();
+                case 1 -> {
+                    System.out.println("\n--- Задание 1. Имена ---");
+                    System.out.print(Task1.run());
+                }
+                case 2 -> {
+                    System.out.println("\n--- Задание 2. Человек с именем ---");
+                    System.out.print(Task2.run());
+                }
+                case 3 -> {
+                    System.out.println("\n--- Задание 3. Человек с родителем ---");
+                    System.out.print(Task3.run());
+                }
+                case 4 -> {
+                    System.out.println("\n--- Задание 4. Ломаная ---");
+                    System.out.print(Task4.run());
+                }
+                case 5 -> {
+                    System.out.println("\n--- Задание 5. Создаём ломаную ---");
+                    System.out.print(Task5.run());
+                }
+                case 6 -> {
+                    System.out.println("\n--- Задание 6. Длина ломаной ---");
+                    System.out.print(Task6.run());
+                }
                 case 0 -> { System.out.println("До свидания!"); return; }
                 default -> System.out.println("Нет такого пункта.\n");
             }
@@ -36,7 +52,6 @@ public class Main {
         System.out.println("==================================");
     }
 
-    // Проверка ввода: пользователь должен ввести целое число
     private static int readInt(String prompt) {
         while (true) {
             System.out.print(prompt);
@@ -54,7 +69,6 @@ public class Main {
 
 
 
-### Task1
 
 public class Task1 {
 
@@ -98,17 +112,19 @@ public class Task1 {
         return sb.toString();
     }
 
-    public static void run() {
-        System.out.println("--- Задание 1. Имена ---");
-        System.out.println(new Task1("Клеопатра"));
-        System.out.println(new Task1("Пушкин", "Александр", "Сергеевич"));
-        System.out.println(new Task1("Маяковский", "Владимир"));
+    // Возвращает строку с результатом задания 1
+    public static String run() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(new Task1("Клеопатра")).append("\n");
+        sb.append(new Task1("Пушкин", "Александр", "Сергеевич")).append("\n");
+        sb.append(new Task1("Маяковский", "Владимир")).append("\n");
+        return sb.toString();
     }
 }
 
 
 
-### Task2
+
 
 public class Task2 {
 
@@ -128,18 +144,19 @@ public class Task2 {
         return name + ", рост " + height;
     }
 
-    public static void run() {
-        System.out.println("--- Задание 2. Человек с именем ---");
-        System.out.println(new Task2(new Task1("Клеопатра"), 152));
-        System.out.println(new Task2(new Task1("Пушкин", "Александр", "Сергеевич"), 167));
-        System.out.println(new Task2(new Task1("Маяковский", "Владимир"), 189));
+    // Возвращает строку с результатом задания 2
+    public static String run() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(new Task2(new Task1("Клеопатра"), 152)).append("\n");
+        sb.append(new Task2(new Task1("Пушкин", "Александр", "Сергеевич"), 167)).append("\n");
+        sb.append(new Task2(new Task1("Маяковский", "Владимир"), 189)).append("\n");
+        return sb.toString();
     }
 }
 
 
 
 
-### Task3
 
 public class Task3 {
 
@@ -189,27 +206,26 @@ public class Task3 {
         return sb + ", рост " + height;
     }
 
-    public static void run() {
-        System.out.println("--- Задание 3. Человек с родителем ---");
-
+    // Возвращает строку с результатом задания 3
+    public static String run() {
         Task3 boris = new Task3(new Task1("Борис"), 180);
         Task3 peter = new Task3(new Task1("Чудов", "Пётр"), 175, boris);
         Task3 ivan  = new Task3(new Task1("Чудов", "Иван"), 170, peter);
 
-        System.out.println("Иван:  " + ivan);
-        System.out.println("Пётр:  " + peter);
-        System.out.println("Борис: " + boris);
+        StringBuilder sb = new StringBuilder();
+        sb.append("Иван:  ").append(ivan).append("\n");
+        sb.append("Пётр:  ").append(peter).append("\n");
+        sb.append("Борис: ").append(boris).append("\n");
+        return sb.toString();
     }
 }
 
 
 
 
-### Task4
-
 public class Task4 {
 
-    // Внутренний класс Точка
+    // Вложенный класс Точка
     public static class Point {
         private int x;
         private int y;
@@ -237,7 +253,7 @@ public class Task4 {
         }
     }
 
-    // Внутренний класс Ломаная
+    // Вложенный класс Ломаная
     public static class Polyline {
         private Point[] points;
 
@@ -283,9 +299,8 @@ public class Task4 {
         }
     }
 
-    public static void run() {
-        System.out.println("--- Задание 4. Ломаная ---");
-
+    // Возвращает строку с результатом задания 4
+    public static String run() {
         Point p1 = new Point(1, 5);
         Point p2 = new Point(2, 8);
         Point p3 = new Point(5, 3);
@@ -295,21 +310,21 @@ public class Task4 {
         Polyline first  = new Polyline(p1, p2, p3);
         Polyline second = new Polyline(p1, p4, p5, p3);
 
-        System.out.println("Первая ломаная: " + first);
-        System.out.println("Вторая ломаная: " + second);
+        StringBuilder sb = new StringBuilder();
+        sb.append("Первая ломаная: ").append(first).append("\n");
+        sb.append("Вторая ломаная: ").append(second).append("\n");
 
         first.getPoint(0).shift(10, 10);
 
-        System.out.println("После сдвига начала первой ломаной на (10, 10):");
-        System.out.println("Первая ломаная: " + first);
-        System.out.println("Вторая ломаная: " + second);
+        sb.append("После сдвига начала первой ломаной на (10, 10):\n");
+        sb.append("Первая ломаная: ").append(first).append("\n");
+        sb.append("Вторая ломаная: ").append(second).append("\n");
+        return sb.toString();
     }
 }
 
 
 
-
-### Task5
 
 public class Task5 {
 
@@ -336,20 +351,20 @@ public class Task5 {
         return "Task5: [" + empty + "] [" + single + "] [" + multi + "]";
     }
 
-    public static void run() {
-        System.out.println("--- Задание 5. Создаём ломаную ---");
-
+    // Возвращает строку с результатом задания 5
+    public static String run() {
         Task5 t = new Task5();
-        System.out.println("Без параметров:   " + t.getEmpty());
-        System.out.println("Одна точка:       " + t.getSingle());
-        System.out.println("Набор точек:      " + t.getMulti());
+        StringBuilder sb = new StringBuilder();
+        sb.append("Без параметров:   ").append(t.getEmpty()).append("\n");
+        sb.append("Одна точка:       ").append(t.getSingle()).append("\n");
+        sb.append("Набор точек:      ").append(t.getMulti()).append("\n");
+        return sb.toString();
     }
 }
 
 
 
 
-### Task6
 
 public class Task6 {
 
@@ -374,17 +389,19 @@ public class Task6 {
         return "Task6: " + line;
     }
 
-    public static void run() {
-        System.out.println("--- Задание 6. Длина ломаной ---");
-
+    // Возвращает строку с результатом задания 6
+    public static String run() {
         Task6 t = new Task6();
-        System.out.println("Ломаная: " + t.getLine());
-        System.out.printf ("Длина:   %.3f%n", t.length());
+        StringBuilder sb = new StringBuilder();
+        sb.append("Ломаная: ").append(t.getLine()).append("\n");
+        sb.append(String.format("Длина:   %.3f%n", t.length()));
 
         t.getLine().addPoints(new Task4.Point(5, 15), new Task4.Point(8, 10));
 
-        System.out.println("После добавления точек (5;15) и (8;10):");
-        System.out.println("Ломаная: " + t.getLine());
-        System.out.printf ("Длина:   %.3f%n", t.length());
+        sb.append("После добавления точек (5;15) и (8;10):\n");
+        sb.append("Ломаная: ").append(t.getLine()).append("\n");
+        sb.append(String.format("Длина:   %.3f%n", t.length()));
+        return sb.toString();
     }
 }
+
